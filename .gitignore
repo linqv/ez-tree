@@ -1,5 +1,20 @@
 .DS_Store
-build
+
+# Build outputs
+build/
+dist/
+out/
+target/
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# Packaged desktop artifacts
+*.AppImage
+*.deb
+*.rpm
+*.msi
+*-setup.exe
+
 # Logs
 logs
 *.log
@@ -43,6 +58,7 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+package-lock.json
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -87,11 +103,9 @@ web_modules/
 
 # Next.js build output
 .next
-out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/

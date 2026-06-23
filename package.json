@@ -30,13 +30,18 @@
   "types": "./build/ez-tree.es.d.ts",
   "scripts": {
     "dev": "vite --config vite.app.config.js",
+    "build": "bun run build:lib && bun run build:app",
     "build:app": "vite build --config vite.app.config.js",
     "build:lib": "vite build --config vite.lib.config.js",
     "build:watch": "vite build --config vite.lib.config.js --watch",
-    "app": "npm run build:lib && vite --config vite.app.config.js",
-    "preview": "vite preview"
+    "app": "bun run build && vite --config vite.app.config.js",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.11.3",
     "@types/three": "^0.169.0",
     "prettier": "3.3.3",
     "three": "^0.167.x",

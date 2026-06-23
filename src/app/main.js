@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderer.toneMappingExposure = 2;
   container.appendChild(renderer.domElement);
 
-  const { scene, environment, tree, camera, controls } = await createScene(renderer);
+  const { scene, environment, tree, rain, camera, controls } = await createScene(renderer);
 
   const composer = new EffectComposer(renderer);
 
@@ -38,10 +38,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const clock = new THREE.Clock();
   function animate() {
     // Update time for wind sway shaders
-    const t = clock.getElapsedTime();
+    const deltaTime = clock.getDelta();
+    const t = clock.elapsedTime;
     tree.update(t);
     scene.getObjectByName('Forest').children.forEach((o) => o.update(t));
     environment.update(t);
+    rain.update(t, deltaTime);
 
     controls.update();
     composer.render();
@@ -68,13 +70,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 window.toggleAudio = function () {
   document.getElementById('app').removeEventListener('click', toggleAudio);
 
+  const backgroundAudio = document.getElementById('background-audio');
+  const rainAudio = document.getElementById('rain-audio');
+
   if (window.isAudioPlaying) {
     window.isAudioPlaying = false;
     document.getElementById('audio-status').src = "/icons/icon_muted.png";
-    document.getElementById('background-audio').pause();
+    backgroundAudio.pause();
+    rainAudio.pause();
   } else {
     window.isAudioPlaying = true;
     document.getElementById('audio-status').src = "/icons/icon_playing.png";
-    document.getElementById('background-audio').play();
+    backgroundAudio.volume = 0.35;
+    rainAudio.volume = 0.55;
+    backgroundAudio.play();
+    rainAudio.play();
   }
 }

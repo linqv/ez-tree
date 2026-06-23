@@ -412,8 +412,8 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
     <button class="panel-mobile-toggle" aria-label="Toggle panel">
       ${icons.chevronUp}
     </button>
-    <h1 class="panel-title">EZ Tree</h1>
-    <p class="panel-subtitle">Procedural Tree Generator</p>
+    <h1 class="panel-title">Rain Scene</h1>
+    <p class="panel-subtitle">Rain-focused forest study</p>
   `;
   panel.appendChild(header);
 
@@ -428,11 +428,7 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   tabNav.innerHTML = `
     <button class="tab-button active" data-tab="parameters">
       ${icons.tree}
-      <span class="tab-label">Tree</span>
-    </button>
-    <button class="tab-button" data-tab="export">
-      ${icons.archive}
-      <span class="tab-label">Export</span>
+      <span class="tab-label">Rain</span>
     </button>
   `;
   scrollArea.appendChild(tabNav);
@@ -457,7 +453,6 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   const exportTab = document.createElement('div');
   exportTab.className = 'tab-content';
   exportTab.id = 'tab-export';
-  scrollArea.appendChild(exportTab);
 
   // ============================================================================
   // Parameters Tab Content
@@ -503,7 +498,7 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   });
   presetsSection.add(randomSeedBtn);
 
-  parametersTab.appendChild(presetsSection.element);
+  // Tree authoring controls are intentionally hidden so the app reads as a rain scene.
 
   // ----- Bark Section -----
   const barkSection = createSection('Bark', 'cube', false);
@@ -550,7 +545,7 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   barkSection.add(texScaleYSlider);
   controls.push({ control: texScaleYSlider, update: () => texScaleYSlider.setValue(tree.options.bark.textureScale.y) });
 
-  parametersTab.appendChild(barkSection.element);
+  // Tree authoring controls are intentionally hidden so the app reads as a rain scene.
 
   // ----- Branches Section -----
   const branchSection = createSection('Branches', 'share', false);
@@ -708,7 +703,7 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   }
   branchSection.add(twistSubsection);
 
-  parametersTab.appendChild(branchSection.element);
+  // Tree authoring controls are intentionally hidden so the app reads as a rain scene.
 
   // ----- Leaves Section -----
   const leavesSection = createSection('Leaves', 'sparkles', false);
@@ -783,7 +778,7 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   leavesSection.add(roundedNormalsToggle);
   controls.push({ control: roundedNormalsToggle, update: () => roundedNormalsToggle.setValue(tree.options.leaves.roundedNormals) });
 
-  parametersTab.appendChild(leavesSection.element);
+  // Tree authoring controls are intentionally hidden so the app reads as a rain scene.
 
   // ----- Trellis Section -----
   const trellisSection = createSection('Trellis', 'share', false);
@@ -891,10 +886,10 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   controls.push({ control: trellisColorPicker, update: () => trellisColorPicker.setValue(tree.options.trellis.color) });
   trellisSection.add(trellisAppearanceSubsection);
 
-  parametersTab.appendChild(trellisSection.element);
+  // Tree authoring controls are intentionally hidden so the app reads as a rain scene.
 
   // ----- Camera Section -----
-  const cameraSection = createSection('Camera', 'videoCamera', false);
+  const cameraSection = createSection('Camera', 'videoCamera', true);
 
   const autoRotateToggle = createToggle('Auto Rotate', orbitControls.autoRotate, (val) => {
     orbitControls.autoRotate = val;
@@ -911,7 +906,7 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   parametersTab.appendChild(cameraSection.element);
 
   // ----- Environment Section -----
-  const environmentSection = createSection('Environment', 'sun', false);
+  const environmentSection = createSection('Scene', 'sun', true);
 
   const sunAzimuthSlider = createSlider('Sun Angle', environment.skybox.sunAzimuth, 0, 360, 1, (val) => {
     environment.skybox.sunAzimuth = val;
@@ -944,7 +939,7 @@ export function setupUI(tree, environment, renderer, scene, camera, orbitControl
   });
   infoSection.add(aboutBtn);
 
-  parametersTab.appendChild(infoSection.element);
+  // Tree statistics are hidden with the tree authoring controls.
 
   function updateInfoDisplays() {
     vertexDisplay.setValue(tree.vertexCount);

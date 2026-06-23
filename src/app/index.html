@@ -84,8 +84,13 @@
   <!-- Used for file uploads -->
   <input type="file" id="fileInput" accept=".json" style="display: none" />
 
-  <audio id="background-audio" loop>
+  <audio id="background-audio" loop preload="none">
     <source src="/audio/ambience.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="rain-audio" loop preload="none">
+    <source src="/sounds/light-rain-109591.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 

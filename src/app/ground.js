@@ -6,6 +6,15 @@ let _grassTexture = null;
 let _dirtTexture = null;
 let _dirtNormal = null;
 
+function createFallbackTexture(color, colorSpace = THREE.NoColorSpace) {
+  const texture = new THREE.DataTexture(new Uint8Array(color), 1, 1);
+  texture.needsUpdate = true;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.colorSpace = colorSpace;
+  return texture;
+}
+
 /**
  * 
  * @returns {Promise<THREE.Geometry>}
@@ -13,21 +22,9 @@ let _dirtNormal = null;
 async function fetchAssets() {
   if (loaded) return;
 
-  const textureLoader = new THREE.TextureLoader();
-
-  _grassTexture = await textureLoader.loadAsync('/textures/ground/grass.jpg');
-  _grassTexture.wrapS = THREE.RepeatWrapping;
-  _grassTexture.wrapT = THREE.RepeatWrapping;
-  _grassTexture.colorSpace = THREE.SRGBColorSpace;
-
-  _dirtTexture = await textureLoader.loadAsync('/textures/ground/dirt_color.jpg');
-  _dirtTexture.wrapS = THREE.RepeatWrapping;
-  _dirtTexture.wrapT = THREE.RepeatWrapping;
-  _dirtTexture.colorSpace = THREE.SRGBColorSpace;
-
-  _dirtNormal = await textureLoader.loadAsync('/textures/ground/dirt_normal.jpg');
-  _dirtNormal.wrapS = THREE.RepeatWrapping;
-  _dirtNormal.wrapT = THREE.RepeatWrapping;
+  _grassTexture = createFallbackTexture([58, 96, 44, 255], THREE.SRGBColorSpace);
+  _dirtTexture = createFallbackTexture([83, 76, 60, 255], THREE.SRGBColorSpace);
+  _dirtNormal = createFallbackTexture([128, 128, 255, 255]);
 
   loaded = true;
 }

@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Tree, TreePreset } from '@dgreenheck/ez-tree';
 import { Environment } from './environment';
 import { loadPresetWithTextures } from './textures';
+import { Rain } from './rain';
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -12,6 +13,15 @@ function paintUI() {
   return new Promise(resolve => requestAnimationFrame(resolve));
 }
 
+function ensureLeafyTree(tree, count = 28) {
+  tree.options.leaves.count = Math.max(tree.options.leaves.count, count);
+  tree.options.leaves.size = Math.max(tree.options.leaves.size, 2.8);
+  tree.options.leaves.sizeVariance = Math.max(tree.options.leaves.sizeVariance, 0.65);
+  tree.options.leaves.start = Math.min(tree.options.leaves.start, 0.1);
+  tree.options.leaves.alphaTest = 0.25;
+  tree.generate();
+}
+
 /**
  * Creates a new instance of the Three.js scene
  * @param {THREE.WebGLRenderer} renderer 
@@ -19,9 +29,14 @@ function paintUI() {
  */
 export async function createScene(renderer) {
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x94b9f8, 0.0015);
+  scene.fog = new THREE.FogExp2(0x6a7780, 0.0022);
 
   const environment = new Environment();
+  environment.skybox.skyColorLow = new THREE.Color(0x6f8792).convertLinearToSRGB();
+  environment.skybox.skyColorHigh = new THREE.Color(0x2d3b48).convertLinearToSRGB();
+  environment.skybox.sunColor = new THREE.Color(0xb8c5cb).convertLinearToSRGB();
+  environment.skybox.sunElevation = 18;
+  environment.skybox.sun.intensity = 1.7;
   scene.add(environment);
 
   const camera = new THREE.PerspectiveCamera(
@@ -44,6 +59,7 @@ export async function createScene(renderer) {
 
   const tree = new Tree();
   loadPresetWithTextures(tree, 'Ash Medium');
+  ensureLeafyTree(tree, 34);
   tree.castShadow = true;
   tree.receiveShadow = true;
   scene.add(tree);
@@ -58,9 +74,9 @@ export async function createScene(renderer) {
   logoElement.style.clipPath = `inset(100% 0% 0% 0%)`;
   progressElement.innerHTML = 'LOADING... 0%';
 
-  const treeCount = 100;
-  const minDistance = 175;
-  const maxDistance = 500;
+  const treeCount = 18;
+  const minDistance = 220;
+  const maxDistance = 560;
 
   function createTree() {
     const r = minDistance + Math.random() * maxDistance;
@@ -72,7 +88,7 @@ export async function createScene(renderer) {
     t.position.set(r * Math.cos(theta), 0, r * Math.sin(theta));
     loadPresetWithTextures(t, presets[index]);
     t.options.seed = 10000 * Math.random();
-    t.generate();
+    ensureLeafyTree(t, 22);
     t.castShadow = true;
     t.receiveShadow = true;
 
@@ -106,10 +122,14 @@ export async function createScene(renderer) {
 
   scene.add(forest);
 
+  const rain = new Rain(camera);
+  scene.add(rain);
+
   return {
     scene,
     environment,
     tree,
+    rain,
     camera,
     controls
   }
