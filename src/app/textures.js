@@ -26,6 +26,7 @@ export const LeafType = {
 
 const barkCache = new Map();
 const leafCache = new Map();
+const textureLoader = new THREE.TextureLoader();
 
 function createFallbackTexture(colors, colorSpace = THREE.NoColorSpace) {
   const size = Math.sqrt(colors.length / 4);
@@ -120,7 +121,18 @@ export function getBarkMaps(type) {
  */
 export function getLeafMap(type) {
   if (leafCache.has(type)) return leafCache.get(type);
-  const texture = createLeafTexture(type);
+
+  const texture = textureLoader.load(
+    `/textures/leaves/${type}.png`,
+    () => {},
+    undefined,
+    () => {
+      leafCache.set(type, createLeafTexture(type));
+    }
+  );
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.premultiplyAlpha = true;
+
   leafCache.set(type, texture);
   return texture;
 }
